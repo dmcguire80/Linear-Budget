@@ -8,16 +8,12 @@ import { SetupWizard } from '@/components/SetupWizard';
 import { useCalculations } from '@/hooks/useCalculations';
 import { useData } from '@/context/DataContext';
 import type { Bill, Payday, Entry } from '@/types';
-import { Plus, Calendar, Eye, EyeOff } from 'lucide-react';
+import { Plus, Calendar, Eye, EyeOff, Filter } from 'lucide-react';
 import { uuid } from '@/utils/uuid';
 
-import { ManageBills } from '@/pages/ManageBills';
-import { ManageAccounts } from '@/pages/ManageAccounts';
-import { ManagePaydays } from '@/pages/ManagePaydays';
 import { DataManagement } from '@/pages/DataManagement';
-import { SettingsLayout } from '@/components/SettingsLayout';
+import { Settings } from '@/pages/Settings';
 import { SettingsProfile } from '@/pages/SettingsProfile';
-import { SettingsAppearance } from '@/pages/SettingsAppearance';
 import { SettingsSecurity } from '@/pages/SettingsSecurity';
 import { Analytics } from '@/pages/Analytics';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
@@ -39,6 +35,7 @@ function Dashboard() {
   const [isBillFormOpen, setIsBillFormOpen] = useState(false);
   const [isPaydayFormOpen, setIsPaydayFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [filterBillName, setFilterBillName] = useState('');
 
   const calculatedData = useCalculations(entries, accounts);
 
@@ -102,11 +99,20 @@ function Dashboard() {
       })()
     : visibleData;
 
+  const billNames = [...new Set(finalVisibleData.filter((e) => e.type === 'bill').map((e) => e.name))]
+    .sort();
+
+  const filteredData = filterBillName
+    ? finalVisibleData.filter(
+        (entry) => entry.type === 'payday' || entry.name === filterBillName
+      )
+    : finalVisibleData;
+
   const handleScrollToToday = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const entriesWithDates = finalVisibleData.map((entry) => {
+    const entriesWithDates = filteredData.map((entry) => {
       const [monthName, yearShort] = entry.month.split(" '");
       const year = 2000 + parseInt(yearShort || '26');
       const monthIndex = [
@@ -223,16 +229,39 @@ function Dashboard() {
           </p>
         </div>
         <div className="flex gap-2 sm:gap-3 items-center">
+          <div className="relative shrink-0">
+            <select
+              value={filterBillName}
+              onChange={(e) => setFilterBillName(e.target.value)}
+              className={`appearance-none pl-8 pr-6 py-0 rounded-lg font-medium transition-colors h-11 text-sm border cursor-pointer w-auto ${
+                filterBillName
+                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30'
+                  : 'btn-secondary'
+              }`}
+              title="Filter by bill name"
+            >
+              <option value="">All Bills</option>
+              {billNames.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+            <Filter
+              size={16}
+              className="absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none text-current"
+            />
+          </div>
           <button
             onClick={handleScrollToToday}
-            className="btn-secondary px-3 py-2 rounded-lg font-medium transition-colors h-10 w-10 flex items-center justify-center shrink-0"
+            className="btn-secondary px-3 py-2 rounded-lg font-medium transition-colors h-11 w-11 flex items-center justify-center shrink-0"
             title="Scroll to Today"
           >
             <Calendar size={20} />
           </button>
           <button
             onClick={() => setHidePaid(!hidePaid)}
-            className={`border px-3 py-2 rounded-lg font-medium transition-colors h-10 w-10 flex items-center justify-center shrink-0 ${
+            className={`border px-3 py-2 rounded-lg font-medium transition-colors h-11 w-11 flex items-center justify-center shrink-0 ${
               hidePaid
                 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30'
                 : 'btn-secondary'
@@ -244,7 +273,7 @@ function Dashboard() {
           <div className="w-px h-8 bg-[var(--border-color)] mx-1 hidden sm:block"></div>
           <button
             onClick={() => setIsPaydayFormOpen(true)}
-            className="btn-secondary text-emerald-400 border-emerald-500/20 px-3 sm:px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors h-10 shrink-0"
+            className="btn-secondary text-emerald-400 border-emerald-500/20 px-3 sm:px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors h-11 shrink-0"
             title="Add Deposit"
           >
             <Plus size={20} />
@@ -252,7 +281,7 @@ function Dashboard() {
           </button>
           <button
             onClick={() => setIsBillFormOpen(true)}
-            className="btn-primary text-white px-3 sm:px-4 py-2 rounded-lg font-medium shadow-lg flex items-center gap-2 transition-colors h-10 shrink-0"
+            className="btn-primary text-white px-3 sm:px-4 py-2 rounded-lg font-medium shadow-lg flex items-center gap-2 transition-colors h-11 shrink-0"
             title="One-time Payment"
           >
             <Plus size={20} />
@@ -262,7 +291,7 @@ function Dashboard() {
       </header>
 
       <BillTable
-        data={finalVisibleData}
+        data={filteredData}
         onTogglePaid={handleTogglePaid}
         onEdit={openEdit}
         onDelete={handleDelete}
@@ -368,20 +397,72 @@ export default function App() {
         path="/settings"
         element={
           <ProtectedRoute>
-            {accounts.length === 0 ? <Navigate to="/setup" replace /> : <SettingsLayout />}
+            {accounts.length === 0 ? (
+              <Navigate to="/setup" replace />
+            ) : (
+              <Layout>
+                <Settings />
+              </Layout>
+            )}
           </ProtectedRoute>
         }
-      >
-        <Route index element={<Navigate to="profile" replace />} />
-        <Route path="preferences" element={<Navigate to="appearance" replace />} />
-        <Route path="profile" element={<SettingsProfile />} />
-        <Route path="appearance" element={<SettingsAppearance />} />
-        <Route path="security" element={<SettingsSecurity />} />
-        <Route path="data" element={<DataManagement />} />
-        <Route path="bills" element={<ManageBills />} />
-        <Route path="paydays" element={<ManagePaydays />} />
-        <Route path="accounts" element={<ManageAccounts />} />
-      </Route>
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            {accounts.length === 0 ? (
+              <Navigate to="/setup" replace />
+            ) : (
+              <Layout>
+                <SettingsProfile />
+              </Layout>
+            )}
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/security"
+        element={
+          <ProtectedRoute>
+            {accounts.length === 0 ? (
+              <Navigate to="/setup" replace />
+            ) : (
+              <Layout>
+                <SettingsSecurity />
+              </Layout>
+            )}
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/data"
+        element={
+          <ProtectedRoute>
+            {accounts.length === 0 ? (
+              <Navigate to="/setup" replace />
+            ) : (
+              <Layout>
+                <DataManagement />
+              </Layout>
+            )}
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Redirects for old settings URLs */}
+      <Route path="/settings/bills" element={<Navigate to="/settings" replace />} />
+      <Route path="/settings/paydays" element={<Navigate to="/settings" replace />} />
+      <Route path="/settings/accounts" element={<Navigate to="/settings" replace />} />
+      <Route path="/settings/profile" element={<Navigate to="/profile" replace />} />
+      <Route path="/settings/appearance" element={<Navigate to="/settings" replace />} />
+      <Route path="/settings/security" element={<Navigate to="/security" replace />} />
+      <Route path="/settings/data" element={<Navigate to="/data" replace />} />
+      <Route path="/settings/preferences" element={<Navigate to="/settings" replace />} />
+      <Route path="/appearance" element={<Navigate to="/settings" replace />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

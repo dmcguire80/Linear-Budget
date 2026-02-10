@@ -22,7 +22,7 @@ export const SettingsSecurity = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-xl font-bold text-[var(--text-primary)]">Security</h3>
+        <h2 className="text-2xl font-bold text-[var(--text-primary)]">Security</h2>
         <p className="text-[var(--text-secondary)]">
           Manage your account security and authentication methods.
         </p>
