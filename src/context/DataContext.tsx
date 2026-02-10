@@ -109,10 +109,16 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
     setLoading(true);
     const uid = user.uid;
+    let loadedCount = 0;
+    const markLoaded = () => {
+      loadedCount++;
+      if (loadedCount >= 4) setLoading(false);
+    };
 
     const unsubEntries = onSnapshot(userCollection(uid, 'entries'), (snapshot) => {
       const data = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }) as Entry);
       setEntries(data);
+      markLoaded();
     });
 
     const unsubAccounts = onSnapshot(userCollection(uid, 'accounts'), (snapshot) => {
@@ -120,19 +126,20 @@ export function DataProvider({ children }: { children: ReactNode }) {
         .map((d) => ({ ...d.data(), id: d.id }) as Account)
         .sort((a, b) => a.order - b.order);
       setAccounts(data);
+      markLoaded();
     });
 
     const unsubTemplates = onSnapshot(userCollection(uid, 'templates'), (snapshot) => {
       const data = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }) as BillTemplate);
       setTemplates(data);
+      markLoaded();
     });
 
     const unsubPaydayTemplates = onSnapshot(userCollection(uid, 'paydayTemplates'), (snapshot) => {
       const data = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }) as PaydayTemplate);
       setPaydayTemplates(data);
+      markLoaded();
     });
-
-    setLoading(false);
 
     return () => {
       unsubEntries();
@@ -350,7 +357,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
       const addToBatch = (collectionName: string, item: Record<string, unknown>) => {
         const ref = doc(userCollection(user.uid, collectionName));
-        const cleaned = cleanForFirestore(item);
+        const { id: _id, userId: _uid, firebaseId: _fbId, ...rest } = item;
+        const cleaned = cleanForFirestore(rest as Record<string, unknown>);
         batch.set(ref, cleaned);
         count++;
       };

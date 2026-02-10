@@ -26,7 +26,7 @@ export const BillTable = ({ data, onTogglePaid, onEdit, onDelete }: BillTablePro
             <th className="px-3 py-3 sticky left-12 z-30 bg-[var(--bg-secondary)] min-w-[60px] border-r border-[var(--border-color)] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">
               Date
             </th>
-            <th className="px-4 py-3 min-w-[140px]">Bill</th>
+            <th className="px-4 py-3 min-w-[100px]">Bill</th>
             <th className="px-2 py-3 text-center w-12">Paid</th>
             {accounts.map((account) => (
               <th key={account.id} className="px-4 py-3 text-right min-w-[100px] text-emerald-400">
@@ -106,14 +106,14 @@ const Row = ({
             <div className="flex flex-col gap-1">
               <button
                 onClick={handleEdit}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-[var(--bg-secondary)] rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-left"
+                className="flex items-center gap-2 px-4 py-3 hover:bg-[var(--bg-secondary)] rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-left"
               >
                 <Edit2 size={16} />
                 <span>Edit</span>
               </button>
               <button
                 onClick={handleDelete}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-red-500/20 rounded text-[var(--text-secondary)] hover:text-red-400 transition-colors text-left"
+                className="flex items-center gap-2 px-4 py-3 hover:bg-red-500/20 rounded text-[var(--text-secondary)] hover:text-red-400 transition-colors text-left"
               >
                 <Trash2 size={16} />
                 <span>Delete</span>
@@ -171,14 +171,14 @@ const Row = ({
           <div className="flex flex-col gap-1">
             <button
               onClick={handleEdit}
-              className="flex items-center gap-2 px-3 py-2 hover:bg-[var(--bg-secondary)] rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-left"
+              className="flex items-center gap-2 px-4 py-3 hover:bg-[var(--bg-secondary)] rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-left"
             >
               <Edit2 size={16} />
               <span>Edit</span>
             </button>
             <button
               onClick={handleDelete}
-              className="flex items-center gap-2 px-3 py-2 hover:bg-red-500/20 rounded text-[var(--text-secondary)] hover:text-red-400 transition-colors text-left"
+              className="flex items-center gap-2 px-4 py-3 hover:bg-red-500/20 rounded text-[var(--text-secondary)] hover:text-red-400 transition-colors text-left"
             >
               <Trash2 size={16} />
               <span>Delete</span>
@@ -190,7 +190,7 @@ const Row = ({
         <button
           onClick={() => onTogglePaid(entry.id)}
           className={clsx(
-            'p-1.5 rounded-md transition-all duration-300 shadow-lg',
+            'p-2 rounded-md transition-all duration-300 shadow-lg',
             bill.paid
               ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 ring-1 ring-emerald-500/50'
               : 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 ring-2 ring-orange-500/50'
