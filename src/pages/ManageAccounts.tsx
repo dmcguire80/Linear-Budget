@@ -71,7 +71,7 @@ export const ManageAccounts = () => {
         <form onSubmit={handleAdd} className="flex gap-4 items-start">
           <div className="flex-1">
             <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">
-              New Account Name
+              New Payment Source
             </label>
             <input
               type="text"
@@ -102,10 +102,7 @@ export const ManageAccounts = () => {
       </div>
 
       <div className="space-y-3 max-w-3xl">
-        {accounts
-          .slice()
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((account, index) => (
+        {accounts.map((account, index) => (
             <div
               key={account.id}
               className="bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex justify-between items-center group hover:bg-white/10 transition-colors"
