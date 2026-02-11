@@ -103,78 +103,78 @@ export const ManageAccounts = () => {
 
       <div className="space-y-3 max-w-3xl">
         {accounts.map((account, index) => (
-            <div
-              key={account.id}
-              className="bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex justify-between items-center group hover:bg-white/10 transition-colors"
-            >
-              {editingId === account.id ? (
-                <div className="flex items-center gap-3 flex-1">
-                  <input
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="bg-[var(--bg-primary)] border border-emerald-500/50 rounded px-3 py-1 text-[var(--text-primary)] flex-1"
-                    autoFocus
-                  />
-                  <button
-                    onClick={saveEdit}
-                    className="p-2 text-emerald-400 hover:bg-emerald-500/10 rounded"
-                  >
-                    <Save size={18} />
-                  </button>
-                  <button
-                    onClick={() => setEditingId(null)}
-                    className="p-2 text-[var(--text-secondary)] hover:bg-white/10 rounded"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <span className="text-[var(--text-tertiary)] font-mono text-sm w-6">
-                    #{index + 1}
-                  </span>
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 font-bold text-sm border border-emerald-500/20">
-                    {account.name.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="font-medium text-[var(--text-primary)]">{account.name}</span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-2">
+          <div
+            key={account.id}
+            className="bg-white/5 border border-[var(--border-color)] rounded-xl p-4 flex justify-between items-center group hover:bg-white/10 transition-colors"
+          >
+            {editingId === account.id ? (
+              <div className="flex items-center gap-3 flex-1">
+                <input
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="bg-[var(--bg-primary)] border border-emerald-500/50 rounded px-3 py-1 text-[var(--text-primary)] flex-1"
+                  autoFocus
+                />
                 <button
-                  onClick={() => moveAccount(index, 'up')}
-                  disabled={index === 0}
-                  className="p-2 text-[var(--text-tertiary)] hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors disabled:opacity-20"
-                  title="Move Up"
+                  onClick={saveEdit}
+                  className="p-2 text-emerald-400 hover:bg-emerald-500/10 rounded"
                 >
-                  <ArrowUp size={18} />
+                  <Save size={18} />
                 </button>
                 <button
-                  onClick={() => moveAccount(index, 'down')}
-                  disabled={index === accounts.length - 1}
-                  className="p-2 text-[var(--text-tertiary)] hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors disabled:opacity-20"
-                  title="Move Down"
+                  onClick={() => setEditingId(null)}
+                  className="p-2 text-[var(--text-secondary)] hover:bg-white/10 rounded"
                 >
-                  <ArrowDown size={18} />
-                </button>
-                <div className="w-px h-6 bg-[var(--border-color)] mx-2" />
-                <button
-                  onClick={() => startEdit(account)}
-                  className="p-2 text-[var(--text-tertiary)] hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
-                  title="Rename Account"
-                >
-                  <Edit2 size={18} />
-                </button>
-                <button
-                  onClick={() => handleDelete(account.id, account.name)}
-                  className="p-2 text-[var(--text-tertiary)] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                  title="Delete Account"
-                >
-                  <Trash2 size={18} />
+                  <X size={18} />
                 </button>
               </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <span className="text-[var(--text-tertiary)] font-mono text-sm w-6">
+                  #{index + 1}
+                </span>
+                <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 font-bold text-sm border border-emerald-500/20">
+                  {account.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="font-medium text-[var(--text-primary)]">{account.name}</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => moveAccount(index, 'up')}
+                disabled={index === 0}
+                className="p-2 text-[var(--text-tertiary)] hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors disabled:opacity-20"
+                title="Move Up"
+              >
+                <ArrowUp size={18} />
+              </button>
+              <button
+                onClick={() => moveAccount(index, 'down')}
+                disabled={index === accounts.length - 1}
+                className="p-2 text-[var(--text-tertiary)] hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors disabled:opacity-20"
+                title="Move Down"
+              >
+                <ArrowDown size={18} />
+              </button>
+              <div className="w-px h-6 bg-[var(--border-color)] mx-2" />
+              <button
+                onClick={() => startEdit(account)}
+                className="p-2 text-[var(--text-tertiary)] hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
+                title="Rename Account"
+              >
+                <Edit2 size={18} />
+              </button>
+              <button
+                onClick={() => handleDelete(account.id, account.name)}
+                className="p-2 text-[var(--text-tertiary)] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                title="Delete Account"
+              >
+                <Trash2 size={18} />
+              </button>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   );

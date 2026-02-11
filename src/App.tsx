@@ -99,13 +99,12 @@ function Dashboard() {
       })()
     : visibleData;
 
-  const billNames = [...new Set(finalVisibleData.filter((e) => e.type === 'bill').map((e) => e.name))]
-    .sort();
+  const billNames = [
+    ...new Set(finalVisibleData.filter((e) => e.type === 'bill').map((e) => e.name)),
+  ].sort();
 
   const filteredData = filterBillName
-    ? finalVisibleData.filter(
-        (entry) => entry.type === 'payday' || entry.name === filterBillName
-      )
+    ? finalVisibleData.filter((entry) => entry.type === 'payday' || entry.name === filterBillName)
     : finalVisibleData;
 
   const handleScrollToToday = () => {
